@@ -12,6 +12,7 @@ import {
   Space,
   Radio,
 } from "antd";
+import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import moment from "moment";
 import SideBar from "./SideBar";
 import { useEffect, useState } from "react";
@@ -116,8 +117,14 @@ export default function HocVien() {
       classtypeId,
       classId,
     });
-    navigate("/students");
-    window.location.reload();
+    if (res.status === 201) {
+      // successNotificationCreate("success");
+      // navigate("/students");
+      showModalBill();
+      // window.location.reload();
+    } else {
+      errorNotificationCreate("error");
+    }
   };
 
   const { Option } = Select;
@@ -171,19 +178,17 @@ export default function HocVien() {
     setChecked(e.target.value);
   }
 
-  const successNotification = (type) => {
+  const successNotificationCreate = (type) => {
     notification[type]({
-      message: "Notification Title",
-      description:
-        "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
+      message: "Successfully",
+      description: "Create student success",
     });
   };
 
-  const errorNotification = (type) => {
+  const errorNotificationCreate = (type) => {
     notification[type]({
-      message: "Notification Title",
-      description:
-        "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
+      message: "Fail",
+      description: "Create student fail",
     });
   };
   function onChange(pagination, filters, sorter, extra) {
@@ -191,15 +196,15 @@ export default function HocVien() {
   }
 
   const columns = [
-    { title: "STT", dataIndex: "index+1" },
-    { title: "Họ tên", dataIndex: "studentName" },
-    { title: "Giới tính", dataIndex: "gender" },
-    { title: "DOB", dataIndex: "DOB" },
-    { title: "Address", dataIndex: "address" },
-    { title: "Phone Number", dataIndex: "phoneNumber" },
+    { title: "#", dataIndex: "" },
+    { title: "Fullname", dataIndex: "studentName" },
+    // { title: "Giới tính", dataIndex: "gender" },
+    // { title: "DOB", dataIndex: "DOB" },
+    // { title: "Address", dataIndex: "address" },
+    // { title: "Phone Number", dataIndex: "phoneNumber" },
 
     {
-      title: "Trình độ",
+      title: "Level",
       dataIndex: "levelName",
       filters: [
         {
@@ -210,39 +215,52 @@ export default function HocVien() {
           text: "B2",
           value: "B2",
         },
+        {
+          text: "C1",
+          value: "C1",
+        },
+        {
+          text: "Toeic",
+          value: "Toeic",
+        },
       ],
       onFilter: (value, record) => record.levelName.startsWith(value),
       filterSearch: true,
     },
+
     {
-      title: "Loại lớp",
+      title: "Classtype",
       dataIndex: "classtypeName",
       filters: [
         {
-          text: "Căn bản 1",
-          value: "cb",
+          text: "Basic 1",
+          value: "Basic 1",
         },
         {
-          text: "OT",
-          value: "ot",
+          text: "Basic 2",
+          value: "Basic 2",
+        },
+        {
+          text: "Review",
+          value: "Review",
         },
       ],
       onFilter: (value, record) => record.classtypeName.startsWith(value),
       filterSearch: true,
     },
     {
-      title: "Tên lớp",
+      title: "Class",
       dataIndex: "className",
-      filters: [
-        {
-          text: "hihi",
-          value: "hi",
-        },
-        {
-          text: "haha",
-          value: "ha",
-        },
-      ],
+      // filters: [
+      //   {
+      //     text: "hihi",
+      //     value: "hi",
+      //   },
+      //   {
+      //     text: "haha",
+      //     value: "ha",
+      //   },
+      // ],
       onFilter: (value, record) => record.className.startsWith(value),
       filterSearch: true,
     },
@@ -251,23 +269,29 @@ export default function HocVien() {
       dataIndex: "index",
       render: (set, record) => (
         <>
-          <Button type="primary" onClick={(e) => deleteStudent(record)}>
-            Delete
-          </Button>
-          <Button
-            type="primary"
-            // id={record.index}
-            onClick={(e) => updateStudent(record)}
-          >
-            Update
-          </Button>
+          <div className="d-flex">
+            <Button>
+              <Link to={"../detail_student/" + record.id}>
+                <EyeOutlined />
+              </Link>
+            </Button>
+            <Button
+              // id={record.index}
+              icon={<EditOutlined />}
+              onClick={(e) => updateStudent(record)}
+            ></Button>
+            <Button
+              icon={<DeleteOutlined />}
+              onClick={(e) => deleteStudent(record)}
+            ></Button>
+          </div>
         </>
       ),
     },
   ];
 
   function onChangeDate(date, dateString) {
-    console.log("hihi", date, dateString);
+    // console.log("hihi", date, dateString);
     setDateForm(dateString);
   }
 
@@ -306,8 +330,8 @@ export default function HocVien() {
 
   const handleOkUpdate = async () => {
     const studentName = form.getFieldValue("fullname");
-    const DOB = dateForm;
     const gender = form.getFieldValue("gender");
+    const DOB = dateForm;
     const address = form.getFieldValue("address");
     const phoneNumber = form.getFieldValue("phonenumber");
     const levelId = form.getFieldValue("level");
@@ -316,21 +340,24 @@ export default function HocVien() {
     const res = await axios.put(
       `http://localhost:8000/student/update/${updateId}`,
       {
-        studentName,
+        studentName: studentName,
         gender,
+        DOB,
         address,
         phoneNumber,
+        levelId,
         classtypeId,
         classId,
       }
     );
     setIsModalVisibleUpdate(false);
     if (res.status === 200) {
-      successNotification("success");
+      // successNotification("success");
     } else {
-      errorNotification("error");
+      // errorNotification("error");
     }
     window.location.reload();
+    console.log("fullname", studentName);
   };
 
   // DELETE
@@ -338,31 +365,58 @@ export default function HocVien() {
   const handleCancelDelete = () => {
     setIsModalVisibleDelete(false);
   };
+  const [idDelete, setIdDelete] = useState();
+
   function deleteStudent(record) {
     setIsModalVisibleDelete(true);
-    // console.log("params", record.DOB);
-    form.setFieldsValue({
-      fullname: record.studentName,
-      gender: record.gender,
-      dob: record.DOB,
-      address: record.address,
-      phonenumber: record.phoneNumber,
-      level: record.levelName,
-      class: record.className,
-      classtype: record.classtypeName,
-    });
-    setIdChekedFromRequest(record.gender);
-    setDateFromRequest(record.DOB);
-    setUpdateId(record.id);
+    setIdDelete(record.id);
   }
+
+  const successNotificationDelete = (type) => {
+    notification[type]({
+      message: "Successfully",
+      description: "Delete student success",
+    });
+  };
+
+  const errorNotificationDelete = (type) => {
+    notification[type]({
+      message: "Fail",
+      description: "Delete student fail",
+    });
+  };
+
   const handleOkDelete = async () => {
-    window.location.reload();
+    const res = await axios.delete(
+      `http://localhost:8000/student/delete/${idDelete}`
+    );
+
+    setIsModalVisibleDelete(false);
+    if (res.status === 200) {
+      successNotificationDelete("success");
+      navigate("/students");
+      window.location.reload();
+    } else {
+      errorNotificationDelete("error");
+      window.location.reload();
+    }
+  };
+  // BILL
+  const [isModalVisibleBill, setIsModalVisibleBill] = useState(false);
+  const showModalBill = () => {
+    setIsModalVisibleBill(true);
+  };
+  const handleCancelBill = () => {
+    setIsModalVisibleBill(false);
   };
 
   return (
     <>
       <SideBar />
-      <Layout className="site-layout" style={{ marginLeft: 200 }}>
+      <Layout
+        className="site-layout"
+        style={{ marginLeft: 200, position: "relative", bottom: 300 }}
+      >
         <Content style={{ margin: "0 16px 0", overflow: "initial" }}>
           <Header />
           <div
@@ -448,8 +502,8 @@ export default function HocVien() {
             ]}
           >
             <Radio.Group name="radiogroup" onChange={onChangeRadio}>
-              <Radio value="male">Male</Radio>
-              <Radio value="female">Female</Radio>
+              <Radio value="Male">Male</Radio>
+              <Radio value="Female">Female</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item
@@ -613,8 +667,8 @@ export default function HocVien() {
               onChange={onChangeRadio}
               checked={idChekedFromRequest}
             >
-              <Radio value="male">Male</Radio>
-              <Radio value="female">Female</Radio>
+              <Radio value="Male">Male</Radio>
+              <Radio value="Female">Female</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item
@@ -714,7 +768,154 @@ export default function HocVien() {
         onOk={handleOkDelete}
         onCancel={handleCancelDelete}
       >
-        <p> bạn có muốn xóa</p>
+        <Form form={form}></Form>
+        <p> Are you sure to delete the student {idDelete}</p>
+      </Modal>
+
+      {/* FORM CREATE BILL */}
+      <Modal
+        title="Create Bill"
+        visible={isModalVisibleBill}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        width={800}
+        style={{ marginTop: "-50px" }}
+      >
+        <Form
+          form={form}
+          name="basic"
+          labelCol={{
+            span: 8,
+          }}
+          wrapperCol={{
+            span: 16,
+          }}
+          initialValues={{
+            remember: true,
+          }}
+          // onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
+        >
+          <Form.Item
+            label="Fullname"
+            name="fullname"
+            rules={[
+              {
+                required: true,
+                message: "Please input your fullname !",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Billing day"
+            name="billingDay"
+            rules={[
+              {
+                required: true,
+                message: "Please input your Billing day !",
+              },
+            ]}
+          >
+            <Space direction="vertical" size={12}>
+              <DatePicker
+                // defaultValue={moment("2015/01/01", dateFormat)}
+                onChange={onChangeDate}
+                format={dateFormat}
+              />
+            </Space>
+          </Form.Item>
+
+          <Form.Item
+            label="Level"
+            name="level"
+            rules={[
+              {
+                required: true,
+                message: "Please input your level!",
+              },
+            ]}
+          >
+            <Select placeholder="Choose level" onChange={handleChangeLevel}>
+              {levelList.map((level) => {
+                return <Option value={level.id}>{level.levelName}</Option>;
+              })}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            label="Classtype"
+            name="classtype"
+            rules={[
+              {
+                required: true,
+                message: "Please input your classtype!",
+              },
+            ]}
+          >
+            <Select
+              placeholder="Choose Classtype"
+              onChange={handleChangeClasstype}
+            >
+              {classtypeList.map((classtype) => {
+                return (
+                  <Option value={classtype.id}>
+                    {classtype.classtypeName}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            label="Class"
+            name="class"
+            rules={[
+              {
+                required: true,
+                message: "Please input your class!",
+              },
+            ]}
+          >
+            <Select placeholder="Choose Class" onChange={handleChangeClass}>
+              {classList.map((classes) => {
+                return <Option value={classes.id}>{classes.className}</Option>;
+              })}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            wrapperCol={{
+              offset: 8,
+              span: 16,
+            }}
+          ></Form.Item>
+          <Form.Item
+            label="Total"
+            name="total"
+            rules={[
+              {
+                required: true,
+                message: "Please input your total !",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Reason"
+            name="reason"
+            rules={[
+              {
+                required: true,
+                message: "Please input your reason !",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
       </Modal>
     </>
   );

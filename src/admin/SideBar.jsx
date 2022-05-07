@@ -59,7 +59,7 @@ export default function SideBar() {
           </Menu.Item>
           <Menu.Item key="2" icon={<VideoCameraOutlined />}>
             <NavLink
-              to="/hocvien"
+              to="/students"
               activeClassName="active"
               style={{ textDecoration: "none" }}
             >
@@ -72,7 +72,7 @@ export default function SideBar() {
               activeClassName="active"
               style={{ textDecoration: "none" }}
             >
-              Quản lý học phí
+              Quản lý lịch học
             </NavLink>
           </Menu.Item>
           {/* <Menu.Item key="4" icon={<BarChartOutlined />}>
@@ -104,7 +104,7 @@ export default function SideBar() {
           </Menu.Item>
           <Menu.Item key="7" icon={<TeamOutlined />}>
             <NavLink
-              to="/dangkyonline"
+              to="/registeronline"
               activeClassName="active"
               style={{ textDecoration: "none" }}
             >

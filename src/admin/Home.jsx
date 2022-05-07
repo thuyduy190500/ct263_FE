@@ -7,6 +7,7 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Pie, Column } from "@ant-design/plots";
 import Header from "./Header";
+
 const { Content, Footer, Sider } = Layout;
 
 const DemoColumn = () => {
@@ -153,7 +154,7 @@ const DemoPie1 = () => {
 
 export default function Home() {
   return (
-    <Layout>
+    <Layout style={{ position: "relative", bottom: 400 }}>
       <SideBar />
       <Layout className="site-layout" style={{ marginLeft: 200 }}>
         <Content style={{ margin: "0px 16px 0", overflow: "initial" }}>
