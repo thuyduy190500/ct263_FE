@@ -68,7 +68,7 @@ export default function SideBar() {
           </Menu.Item>
           <Menu.Item key="3" icon={<UploadOutlined />}>
             <NavLink
-              to="/hocphi"
+              to="/schedule"
               activeClassName="active"
               style={{ textDecoration: "none" }}
             >

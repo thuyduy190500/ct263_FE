@@ -9,6 +9,7 @@ import Detail_Students from "./admin/Detail_Students";
 import HomePage from "./client/HomePage";
 import Register_Online from "./admin/Register_Online";
 import Schedule from "./admin/Schedule";
+import Schedule_Students from "./admin/Schedule_Students";
 function App() {
   return (
     <div className="App">
@@ -23,6 +24,10 @@ function App() {
         <Route path="/homepage" element={<HomePage />} />
         <Route path="/registeronline" element={<Register_Online />} />
         <Route path="/schedule" element={<Schedule />} />
+        <Route
+          path="/schedule_students/:classId"
+          element={<Schedule_Students />}
+        />
       </Routes>
     </div>
   );

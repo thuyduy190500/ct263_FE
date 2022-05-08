@@ -21,6 +21,7 @@ import moment from "moment";
 import SideBar from "./SideBar";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 import {
   BrowserRouter as Routes,
@@ -39,14 +40,17 @@ const dateFormat = "YYYY/MM/DD";
 
 const { Content, Footer } = Layout;
 
-export default function Schedule() {
+export default function Schedule_Students() {
   const [scheduleList, setScheduleList] = useState([]);
   const navigate = useNavigate();
+  const { classId } = useParams();
 
   useEffect(() => {
     const getSchedule = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/schedule");
+        const res = await axios.get(
+          `http://localhost:8000/schedule_students/${classId}`
+        );
 
         setScheduleList(res.data);
       } catch (error) {
@@ -62,83 +66,14 @@ export default function Schedule() {
   const columns = [
     { title: "#", dataIndex: "" },
     {
-      title: "Class",
-      dataIndex: "class",
+      title: "Fullname",
+      dataIndex: "studentName",
     },
-    { title: "Schoolday", dataIndex: "schoolday" },
+    { title: "Gender", dataIndex: "gender" },
+    { title: "DOB", dataIndex: "DOB" },
     {
-      title: "Session Start",
-      dataIndex: "sessionStart",
-    },
-
-    {
-      title: "Session End",
-      dataIndex: "sessionEnd",
-    },
-    {
-      title: "Teacher",
-      dataIndex: "teacher",
-    },
-    { title: "Classroom", dataIndex: "classroom" },
-    // {
-    //   title: "Level",
-    //   dataIndex: "level",
-    //   filters: [
-    //     {
-    //       text: "B1",
-    //       value: "B1",
-    //     },
-    //     {
-    //       text: "B2",
-    //       value: "B2",
-    //     },
-    //     {
-    //       text: "C1",
-    //       value: "C1",
-    //     },
-    //     {
-    //       text: "Toeic",
-    //       value: "Toeic",
-    //     },
-    //   ],
-    //   onFilter: (value, record) => record.levelName.startsWith(value),
-    //   filterSearch: true,
-    // },
-
-    // {
-    //   title: "Classtype",
-    //   dataIndex: "classtype",
-    //   filters: [
-    //     {
-    //       text: "Basic 1",
-    //       value: "Basic 1",
-    //     },
-    //     {
-    //       text: "Basic 2",
-    //       value: "Basic 2",
-    //     },
-    //     {
-    //       text: "Review",
-    //       value: "Review",
-    //     },
-    //   ],
-    //   onFilter: (value, record) => record.classtypeName.startsWith(value),
-    //   filterSearch: true,
-    // },
-    {
-      title: "View",
-      dataIndex: "index",
-      render: (set, record) => (
-        <>
-          <div className="d-flex">
-            <Button>
-              <Link to={"../schedule_students/" + record.classId}>
-                <EyeOutlined />
-              </Link>
-            </Button>
-          </div>
-        </>
-      ),
+      title: "Address",
+      dataIndex: "address",
     },
   ];
   return (
