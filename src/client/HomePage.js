@@ -200,7 +200,7 @@ export default function HomePage() {
               </button>
 
               <a href="#" className="navbar-brand">
-                Known
+                EnglishCenter
               </a>
             </div>
 
@@ -231,7 +231,7 @@ export default function HomePage() {
                 </li>
                 <li>
                   <a href="#testimonial" className="smoothScroll">
-                    Reviews
+                    Đánh giá
                   </a>
                 </li>
                 <li>
@@ -646,7 +646,7 @@ export default function HomePage() {
             <div className="row">
               <div className="col-md-12 col-sm-12">
                 <div className="section-title">
-                  <h2>Student Reviews</h2>
+                  <h2>Học viên nói gì về trung tâm</h2>
                 </div>
                 <div className="site-card-wrapper">
                   <Row gutter={16}>

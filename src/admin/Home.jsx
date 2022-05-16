@@ -163,21 +163,58 @@ export default function Home() {
             className="column"
             style={{ width: 600, height: 350, margin: "20px 180px" }}
           >
-            <h3 style={{ margin: "20px 0" }}>
-              Thống kê số lượng đăng ký của học viên
+            <h3
+              style={{
+                margin: "20px 0",
+                textTransform: "uppercase",
+                textAlign: "center",
+                fontWeight: "bold",
+              }}
+            >
+              Statistics on the number of registered students
             </h3>
             <DemoColumn />
           </div>
-          <div className="list-column" style={{ margin: "100px" }}>
-            <h3>Thống kê số lượng học viên đang theo học và đã có chứng chỉ</h3>
-            <div className="d-flex" style={{}}>
+          <div
+            className="list-column"
+            style={{
+              margin: "100px",
+            }}
+          >
+            <h3
+              style={{
+                textTransform: "uppercase",
+                textAlign: "center",
+                fontWeight: "bold",
+              }}
+            >
+              Statistics on the number of students who are studying and have
+              obtained certificates
+            </h3>
+            <div className="d-flex">
               <div className="studing" style={{ width: 400, height: 350 }}>
                 <DemoPie />
-                <h6 style={{ textAlign: "center" }}>Đang theo học</h6>
+                <h6
+                  style={{
+                    textAlign: "center",
+                    fontWeight: "bold",
+                    fontSize: 14,
+                  }}
+                >
+                  Studying
+                </h6>
               </div>
               <div className="complete" style={{ width: 400, height: 350 }}>
                 <DemoPie1 />
-                <h6 style={{ textAlign: "center" }}>Đã có chứng chỉ</h6>
+                <h6
+                  style={{
+                    textAlign: "center",
+                    fontSize: 14,
+                    fontWeight: "bold",
+                  }}
+                >
+                  Certificated
+                </h6>
               </div>
             </div>
           </div>

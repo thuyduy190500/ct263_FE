@@ -55,7 +55,12 @@ export default function Register_Online() {
         console.log(tempArr);
         console.log(res.data);
 
-        setRegisterList(tempArr);
+        const registerOnlineList = tempArr.map((obj, index) => ({
+          ...obj,
+          key: index + 1,
+        }));
+
+        setRegisterList(registerOnlineList);
       } catch (error) {
         console.log(error.massage);
       }
@@ -90,7 +95,7 @@ export default function Register_Online() {
   };
 
   const columns = [
-    { title: "#", dataIndex: "" },
+    { title: "#", dataIndex: "key" },
     { title: "Fullname", dataIndex: "fullName" },
     {
       title: "Level",
@@ -258,13 +263,13 @@ export default function Register_Online() {
       </Layout>
       {/* FORM DELETE */}
       <Modal
-        title="Basic Modal"
+        title="Delete"
         visible={isModalVisibleDelete}
         onOk={handleOkDelete}
         onCancel={handleCancelDelete}
       >
         <Form form={form}></Form>
-        <p> Are you sure to delete the this student </p>
+        <p> Are you sure to delete the this register online </p>
       </Modal>
     </>
   );

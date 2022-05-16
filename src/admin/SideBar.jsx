@@ -39,7 +39,8 @@ export default function SideBar() {
             width={60}
             style={{ borderRadius: "50%" }}
           />
-          <span style={{ color: "white" }}> Admin</span>
+
+          <span style={{ color: "white", fontSize: 14 }}> Admin</span>
         </div>
         <Menu
           theme="dark"
@@ -49,7 +50,7 @@ export default function SideBar() {
         >
           <Menu.Item key="1" icon={<UserOutlined />}>
             <NavLink
-              to="/"
+              to="/home"
               activeClassName="active"
               exact="true"
               style={{ textDecoration: "none" }}
@@ -57,13 +58,13 @@ export default function SideBar() {
               Home
             </NavLink>
           </Menu.Item>
-          <Menu.Item key="2" icon={<VideoCameraOutlined />}>
+          <Menu.Item key="2" icon={<TeamOutlined />}>
             <NavLink
               to="/students"
               activeClassName="active"
               style={{ textDecoration: "none" }}
             >
-              Quản lý học viên
+              Students
             </NavLink>
           </Menu.Item>
           <Menu.Item key="3" icon={<UploadOutlined />}>
@@ -72,43 +73,44 @@ export default function SideBar() {
               activeClassName="active"
               style={{ textDecoration: "none" }}
             >
-              Quản lý lịch học
+              Schedules
             </NavLink>
           </Menu.Item>
-          {/* <Menu.Item key="4" icon={<BarChartOutlined />}>
-            <NavLink
-              to="/lophoc"
-              activeClassName="active"
-              style={{ textDecoration: "none" }}
-            >
-              Quản lý lớp học
-            </NavLink>
-          </Menu.Item> */}
+
           <Menu.Item key="5" icon={<CloudOutlined />}>
             <NavLink
               to="/diem"
               activeClassName="active"
               style={{ textDecoration: "none" }}
             >
-              Quản lý điểm
+              Scores
             </NavLink>
           </Menu.Item>
-          <Menu.Item key="6" icon={<AppstoreOutlined />}>
+          {/* <Menu.Item key="6" icon={<AppstoreOutlined />}>
             <NavLink
               to="/phieudatcho"
               activeClassName="active"
               style={{ textDecoration: "none" }}
             >
-              Phiếu đặt chỗ
+              Booking
             </NavLink>
-          </Menu.Item>
-          <Menu.Item key="7" icon={<TeamOutlined />}>
+          </Menu.Item> */}
+          <Menu.Item key="7" icon={<AppstoreOutlined />}>
             <NavLink
               to="/registeronline"
               activeClassName="active"
               style={{ textDecoration: "none" }}
             >
-              Đăng ký online
+              Booking online
+            </NavLink>
+          </Menu.Item>
+          <Menu.Item key="6" icon={<ShopOutlined />}>
+            <NavLink
+              to="/homepage"
+              activeClassName="active"
+              style={{ textDecoration: "none" }}
+            >
+              Website
             </NavLink>
           </Menu.Item>
           {/* <Menu.Item key="6" icon={<AppstoreOutlined />}>

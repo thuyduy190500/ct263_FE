@@ -25,7 +25,7 @@ export default function Login() {
       // console.log(isLogin.data);
       if (isLogin.data) {
         console.log(isLogin.data);
-        navigate("/");
+        navigate("/home");
       }
     }
     // setFullName({name:'TrungHC',familyName: 'HCT'});

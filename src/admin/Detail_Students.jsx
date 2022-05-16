@@ -15,12 +15,25 @@ const { Panel } = Collapse;
 
 export default function Detail_Students() {
   const [studentList, setStudentList] = useState([]);
+  const [studentBill, setStudentBill] = useState();
+  const [studentBill1, setStudentBill1] = useState();
+
   const { id } = useParams();
   useEffect(() => {
     const getUsers = async () => {
       try {
         const res = await axios.get(`http://localhost:8000/student/${id}`);
-        setStudentList(res.data);
+        if (res.status == 200) {
+          setStudentList(res.data);
+          const resBill = await axios.get(`http://localhost:8000/bill/${id}`);
+          // setStudentBill(resBill);
+          if (resBill.data.length == 0) {
+            setStudentBill1("No");
+          } else {
+            setStudentBill1("Yes");
+          }
+        } else {
+        }
       } catch (error) {
         console.log(error.massage);
       }
@@ -50,7 +63,7 @@ export default function Detail_Students() {
               className="site-collapse-custom-collapse"
             >
               <Panel
-                header="THÔNG TIN CÁ NHÂN"
+                header="PERSONAL "
                 key="1"
                 className="site-collapse-custom-panel"
                 style={{ textAlign: "left" }}
@@ -84,7 +97,7 @@ export default function Detail_Students() {
                 })}
               </Panel>
               <Panel
-                header="THÔNG TIN LỚP HỌC"
+                header="CLASS "
                 key="2"
                 className="site-collapse-custom-panel"
                 style={{ textAlign: "left" }}
@@ -110,7 +123,7 @@ export default function Detail_Students() {
                 })}
               </Panel>
               <Panel
-                header="THÔNG TIN HỌC PHÍ"
+                header="TUITION"
                 key="3"
                 className="site-collapse-custom-panel"
                 style={{ textAlign: "left" }}
@@ -119,8 +132,7 @@ export default function Detail_Students() {
                   return (
                     <>
                       <div className="">
-                        <strong>Fee:</strong>
-                        <span>{student.total}</span>
+                        <strong>Fee: {studentBill1} </strong>
                       </div>
                     </>
                   );

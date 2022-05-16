@@ -21,6 +21,7 @@ import moment from "moment";
 import SideBar from "./SideBar";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 import {
   BrowserRouter as Routes,
@@ -30,6 +31,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import Header from "./Header";
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
 
 // const [form] = Form.useForm();
 
@@ -55,6 +57,13 @@ export default function Schedule() {
     };
     getSchedule();
   }, []);
+
+  //   const [classView, setClassView] = useState();
+  //   const viewStudents = async (e) => {
+  //     setClassView(e.target.id);
+  //     // navigate("../schedule_students/" + classView);
+  //   };
+  //   console.log("aaaa", classView);
 
   function onChange(pagination, filters, sorter, extra) {
     console.log("params", pagination, filters, sorter, extra);
@@ -143,25 +152,89 @@ export default function Schedule() {
   ];
   return (
     <>
-      <SideBar />
-      <Layout
-        className="site-layout"
-        style={{ marginLeft: 200, position: "relative", bottom: 300 }}
-      >
-        <Content style={{ margin: "0 16px 0", overflow: "initial" }}>
-          <Header />
-          <div
-            className="site-layout-background"
-            style={{ padding: 24, textAlign: "center" }}
-          >
-            <Table
+      <div className="a">
+        <SideBar />
+        <Layout
+          className="site-layout"
+          style={{ marginLeft: 200, position: "relative", bottom: 300 }}
+        >
+          <Content style={{ margin: "0 16px 0", overflow: "initial" }}>
+            <Header />
+            <div
+              className="site-layout-background"
+              style={{ padding: 24, textAlign: "center" }}
+            >
+              {/* <Table
               columns={columns}
               dataSource={scheduleList}
               onChange={onChange}
-            />
-          </div>
-        </Content>
-      </Layout>
+            /> */}
+              <div
+                style={{
+                  fontSize: 15,
+                  position: "relative",
+                  bottom: 30,
+                }}
+              >
+                <ReactHTMLTableToExcel
+                  id="test-table-xls-button"
+                  className="download-table-xls-button"
+                  table="table_excel"
+                  filename="tablexls"
+                  sheet="tablexls"
+                  buttonText="Export"
+                />
+              </div>
+
+              <table className="table table-striped" id="table_excel">
+                <thead className="thead-dark">
+                  <tr style={{ textTransform: "uppercase", fontSize: 14 }}>
+                    <th scope="col">#</th>
+                    <th scope="col">Class</th>
+                    <th scope="col">Schoolday</th>
+                    <th scope="col">Session Start</th>
+                    <th scope="col">Session End </th>
+                    <th scope="col">Teacher</th>
+                    <th scope="col">Classroom</th>
+                    <th scope="col">View</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {scheduleList.map((schedule, index) => {
+                    return (
+                      <>
+                        <tr
+                          style={{
+                            fontSize: 16,
+                            fontFamily: "Times New Roman",
+                          }}
+                        >
+                          <th>{index + 1}</th>
+                          <th>{schedule.class}</th>
+                          <th>{schedule.schoolday}</th>
+                          <th>{schedule.sessionStart}</th>
+                          <th>{schedule.sessionEnd}</th>
+                          <th>{schedule.teacher}</th>
+                          <th>{schedule.classroom}</th>
+                          <th>
+                            <Button>
+                              <Link
+                                to={"../schedule_students/" + schedule.classId}
+                              >
+                                <EyeOutlined />
+                              </Link>
+                            </Button>
+                          </th>
+                        </tr>
+                      </>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </Content>
+        </Layout>
+      </div>
     </>
   );
 }

@@ -54,7 +54,11 @@ export default function HocVien() {
         // const tempArr = [lastUser, ...aUser];
         // console.log(tempArr);
         // console.log(res.data);
-        setUserList(res.data);
+        const customUserList = res.data.map((obj, index) => ({
+          ...obj,
+          key: index + 1,
+        }));
+        setUserList(customUserList);
       } catch (error) {
         console.log(error.massage);
       }
@@ -97,6 +101,7 @@ export default function HocVien() {
     console.log("Failed:", errorInfo);
   };
   const [form] = Form.useForm();
+  const [studentId, setStudentId] = useState();
 
   const handleOk = async () => {
     const studentName = form.getFieldValue("fullname");
@@ -107,6 +112,7 @@ export default function HocVien() {
     const levelId = form.getFieldValue("level");
     const classtypeId = form.getFieldValue("classtype");
     const classId = form.getFieldValue("class");
+    const total = form.getFieldValue("total1");
     const res = await axios.post("http://localhost:8000/students/create", {
       studentName,
       DOB,
@@ -120,7 +126,26 @@ export default function HocVien() {
     if (res.status === 201) {
       // successNotificationCreate("success");
       // navigate("/students");
+      handleCancel();
       showModalBill();
+      console.log("debug");
+      form.setFieldsValue({ fullname1: studentName });
+      form.setFieldsValue({ level1: levelId });
+      form.setFieldsValue({ classtype1: classtypeId });
+      form.setFieldsValue({ class1: classId });
+
+      const resFetchApi = await axios.get("http://localhost:8000/fees");
+      console.log(resFetchApi.data);
+      const totalFee = resFetchApi.data.record.fee;
+      console.log("total", totalFee);
+
+      form.setFieldsValue({ total1: totalFee });
+      setStudentId(resFetchApi.data.studentId);
+      // const res = get("Ssss",resStudent.classtype1,resStudent.levelId)
+      // const billingDay = form.getFieldValue("reason1");
+      // console.log("billing", billingDay);
+      // console.log("total 1  ", total);
+
       // window.location.reload();
     } else {
       errorNotificationCreate("error");
@@ -181,14 +206,14 @@ export default function HocVien() {
   const successNotificationCreate = (type) => {
     notification[type]({
       message: "Successfully",
-      description: "Create student success",
+      description: "Create  success",
     });
   };
 
   const errorNotificationCreate = (type) => {
     notification[type]({
       message: "Fail",
-      description: "Create student fail",
+      description: "Create  fail",
     });
   };
   function onChange(pagination, filters, sorter, extra) {
@@ -196,7 +221,7 @@ export default function HocVien() {
   }
 
   const columns = [
-    { title: "#", dataIndex: "" },
+    { title: "#", dataIndex: "key" },
     { title: "Fullname", dataIndex: "studentName" },
     // { title: "Giới tính", dataIndex: "gender" },
     // { title: "DOB", dataIndex: "DOB" },
@@ -352,11 +377,11 @@ export default function HocVien() {
     );
     setIsModalVisibleUpdate(false);
     if (res.status === 200) {
-      // successNotification("success");
+      successNotificationCreate("success");
+      window.location.reload();
     } else {
-      // errorNotification("error");
+      errorNotificationCreate("error");
     }
-    window.location.reload();
     console.log("fullname", studentName);
   };
 
@@ -394,7 +419,7 @@ export default function HocVien() {
     setIsModalVisibleDelete(false);
     if (res.status === 200) {
       successNotificationDelete("success");
-      navigate("/students");
+      // navigate("/students");
       window.location.reload();
     } else {
       errorNotificationDelete("error");
@@ -410,6 +435,43 @@ export default function HocVien() {
     setIsModalVisibleBill(false);
   };
 
+  const handleOkBill = async () => {
+    const studentName = form.getFieldValue("fullname1");
+    const billingday = dateForm;
+    const levelId = form.getFieldValue("level1");
+    const classtypeId = form.getFieldValue("classtype1");
+    const classId = form.getFieldValue("class1");
+    const total = form.getFieldValue("total1");
+    const reason = form.getFieldValue("reason1");
+
+    console.log(
+      "bill",
+      studentName,
+      billingday,
+      levelId,
+      classtypeId,
+      classId,
+      total,
+      reason
+    );
+    const res = await axios.post("http://localhost:8000/bill/create", {
+      studentName,
+      billingday,
+      levelId,
+      classtypeId,
+      classId,
+      total,
+      reason,
+      studentId,
+    });
+    if (res.status === 201) {
+      successNotificationCreate("success");
+      window.location.reload();
+    } else {
+      errorNotificationCreate("error");
+    }
+  };
+
   return (
     <>
       <SideBar />
@@ -423,9 +485,14 @@ export default function HocVien() {
             className="site-layout-background"
             style={{ padding: 24, textAlign: "center" }}
           >
-            <Button type="primary" onClick={showModal}>
-              Thêm
+            <Button
+              type="primary"
+              onClick={showModal}
+              style={{ position: "relative", left: 250, bottom: 20 }}
+            >
+              Add
             </Button>
+
             <Table
               columns={columns}
               dataSource={userList}
@@ -485,7 +552,7 @@ export default function HocVien() {
           >
             <Space direction="vertical" size={12}>
               <DatePicker
-                defaultValue={moment("2015/01/01", dateFormat)}
+                // defaultValue={moment("", dateFormat)}
                 onChange={onChangeDate}
                 format={dateFormat}
               />
@@ -763,21 +830,21 @@ export default function HocVien() {
 
       {/* FORM DELETE */}
       <Modal
-        title="Basic Modal"
+        title="Delete"
         visible={isModalVisibleDelete}
         onOk={handleOkDelete}
         onCancel={handleCancelDelete}
       >
         <Form form={form}></Form>
-        <p> Are you sure to delete the student {idDelete}</p>
+        <p> Are you sure to delete this student </p>
       </Modal>
 
       {/* FORM CREATE BILL */}
       <Modal
         title="Create Bill"
         visible={isModalVisibleBill}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        onOk={handleOkBill}
+        onCancel={handleCancelBill}
         width={800}
         style={{ marginTop: "-50px" }}
       >
@@ -799,7 +866,7 @@ export default function HocVien() {
         >
           <Form.Item
             label="Fullname"
-            name="fullname"
+            name="fullname1"
             rules={[
               {
                 required: true,
@@ -811,7 +878,7 @@ export default function HocVien() {
           </Form.Item>
           <Form.Item
             label="Billing day"
-            name="billingDay"
+            name="billingDay1"
             rules={[
               {
                 required: true,
@@ -830,7 +897,7 @@ export default function HocVien() {
 
           <Form.Item
             label="Level"
-            name="level"
+            name="level1"
             rules={[
               {
                 required: true,
@@ -847,7 +914,7 @@ export default function HocVien() {
 
           <Form.Item
             label="Classtype"
-            name="classtype"
+            name="classtype1"
             rules={[
               {
                 required: true,
@@ -871,7 +938,7 @@ export default function HocVien() {
 
           <Form.Item
             label="Class"
-            name="class"
+            name="class1"
             rules={[
               {
                 required: true,
@@ -893,7 +960,7 @@ export default function HocVien() {
           ></Form.Item>
           <Form.Item
             label="Total"
-            name="total"
+            name="total1"
             rules={[
               {
                 required: true,
@@ -905,7 +972,7 @@ export default function HocVien() {
           </Form.Item>
           <Form.Item
             label="Reason"
-            name="reason"
+            name="reason1"
             rules={[
               {
                 required: true,

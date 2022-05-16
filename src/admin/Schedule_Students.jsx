@@ -51,8 +51,11 @@ export default function Schedule_Students() {
         const res = await axios.get(
           `http://localhost:8000/schedule_students/${classId}`
         );
-
-        setScheduleList(res.data);
+        const studentScheduleList = res.data.map((obj, index) => ({
+          ...obj,
+          key: index + 1,
+        }));
+        setScheduleList(studentScheduleList);
       } catch (error) {
         console.log(error.massage);
       }
@@ -64,7 +67,7 @@ export default function Schedule_Students() {
     console.log("params", pagination, filters, sorter, extra);
   }
   const columns = [
-    { title: "#", dataIndex: "" },
+    { title: "#", dataIndex: "key" },
     {
       title: "Fullname",
       dataIndex: "studentName",
